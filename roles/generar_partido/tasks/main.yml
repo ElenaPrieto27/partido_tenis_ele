@@ -1,0 +1,29 @@
+---
+- name: Obtener datos aleatorios de dos tenistas
+  uri:
+    url: https://randomuser.me/api/?results=2
+    return_content: yes
+  register: json
+
+- name: Extraer información del primer tenista
+  set_fact:
+    first_name_1: "{{ (json.content | from_json).results[0].name.first }}"
+    last_name_1: "{{ (json.content | from_json).results[0].name.last }}"
+    city_1: "{{ (json.content | from_json).results[0].location.city }}"
+    id_1: "{{ (json.content | from_json).results[0].login.uuid }}"
+
+- name: Extraer información del segundo tenista
+  set_fact:
+    first_name_2: "{{ (json.content | from_json).results[1].name.first }}"
+    last_name_2: "{{ (json.content | from_json).results[1].name.last }}"
+    city_2: "{{ (json.content | from_json).results[1].location.city }}"
+    id_2: "{{ (json.content | from_json).results[1].login.uuid }}"
+
+- name: Generar fecha actual del partido
+  set_fact:
+    fecha_partido: "{{ ansible_date_time.iso8601 }}"
+
+- name: Crear archivo del partido
+  template:
+    src: partido.txt.j2
+    dest: "/vagrant/partido_{{ ansible_date_time.iso8601_basic }}.txt"

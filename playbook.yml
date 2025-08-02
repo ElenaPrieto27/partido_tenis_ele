@@ -1,0 +1,10 @@
+---
+- name: Generar archivo de partido de tenis
+  hosts: default
+  become: yes
+
+  vars_files:
+    - /vagrant/partido_vars.yml  # Cargamos el ID del primer tenista
+
+  roles:
+    - generar_partido
